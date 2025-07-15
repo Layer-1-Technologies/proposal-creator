@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Google Material Symbols -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <style>
         body {
@@ -72,6 +71,11 @@
             
             /* --- FINAL PRINT-SPECIFIC FIXES --- */
             
+            /* Prevent sections from breaking across pages */
+            .print-section-container {
+                page-break-inside: avoid !important;
+            }
+
             /* Force desktop grid layouts to override mobile stacking */
             #why-us .grid,
             #insurance .grid,
@@ -81,11 +85,6 @@
                  gap: 1.5rem !important;
             }
             
-            /* Prevent sections from breaking across pages */
-            .print-section-container {
-                page-break-inside: avoid !important;
-            }
-             
             /* Ensure alignment is correct for specific sections */
             #insurance .text-center {
                 text-align: center !important;
@@ -128,13 +127,11 @@
 </head>
 <body class="bg-gray-100">
 
-    <!-- Gemini API Proposal Assistant (This section will not be printed) -->
     <div class="no-print max-w-4xl mx-auto my-8 p-6 bg-gray-800 text-white rounded-lg shadow-2xl">
         <h2 class="text-2xl font-bold mb-4 border-b border-[#0b5394] pb-2 assistant-header">✨ Proposal Assistant (For Internal Use)</h2>
         <p class="mb-6 text-gray-300">Fill out the fields below, then use the buttons to generate and finalize your proposal.</p>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 mb-4">
-            <!-- Input fields are grouped for easier management by JS -->
             <div data-input-group>
                 <label for="projectName" class="block text-xl font-medium text-gray-300 text-center">Project Name</label>
                 <input type="text" id="projectName" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-[#0b5394] focus:border-[#0b5394]">
@@ -182,7 +179,6 @@
 
 
     <div class="max-w-4xl mx-auto bg-white shadow-2xl print-full-bleed">
-        <!-- Cover Page -->
         <div class="cover-bg relative text-white min-h-screen flex flex-col items-center justify-center p-8 text-center">
             <div class="bg-black bg-opacity-50 p-10 rounded-lg">
                 <img src="https://www.layer-1.com/wp-content/uploads/2025/06/Layer-1-Logo-_-Black-_-300-x-300.png" alt="Layer-1 Technologies Logo" class="mx-auto h-96 w-96 mb-6" onerror="this.style.display='none'">
@@ -201,10 +197,8 @@
             </div>
         </div>
 
-        <!-- Proposal Body -->
         <div class="p-8 md:p-12 proposal-body text-gray-800">
             
-            <!-- Table of Contents -->
             <section id="table-of-contents" class="print-section-container">
                 <h2 class="text-3xl font-bold text-[#0b5394] border-b-2 border-[#0b5394] pb-2 mb-6">Table of Contents</h2>
                 <ul class="list-disc list-inside space-y-3 text-xl">
@@ -219,7 +213,6 @@
                 </ul>
             </section>
             
-            <!-- Static Content Sections -->
             <section id="why-us" class="print-section-container">
                 <h2 class="text-3xl font-bold text-[#0b5394] border-b-2 border-[#0b5394] pb-2 mb-6">Why Choose Layer-1 Technologies?</h2>
                 <div class="text-gray-800 space-y-8">
@@ -248,7 +241,6 @@
                 <h2 class="text-3xl font-bold text-[#0b5394] border-b-2 border-[#0b5394] pb-2 mb-6">Insurance</h2>
                 <p class="mb-4 text-gray-800">Layer-1 Technologies is fully insured for your protection and peace of mind. Our current coverage is listed below.</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Commercial General Liability -->
                     <div class="bg-[#e7f0fa] p-6 rounded-lg text-center">
                         <span class="material-symbols-outlined text-[#0b5394] text-[96px]">task_alt</span>
                         <h4 class="font-bold text-[#0b5394] mt-2 mb-2">Commercial General Liability:</h4>
@@ -256,7 +248,6 @@
                         <br>
                         <p class="text-sm text-gray-800"><strong class="font-semibold">General Aggregate:</strong><br>$4,000,000</p>
                     </div>
-                    <!-- Professional Liability -->
                     <div class="bg-[#e7f0fa] p-6 rounded-lg text-center">
                         <span class="material-symbols-outlined text-[#0b5394] text-[96px]">gpp_good</span>
                         <h4 class="font-bold text-[#0b5394] mt-2 mb-2">Professional Liability:</h4>
@@ -264,13 +255,11 @@
                         <br>
                         <p class="text-sm text-gray-800"><strong class="font-semibold">Aggregate:</strong><br>$3,000,000</p>
                     </div>
-                    <!-- Automobile Liability -->
                     <div class="bg-[#e7f0fa] p-6 rounded-lg text-center">
                        <span class="material-symbols-outlined text-[#0b5394] text-[96px]">local_shipping</span>
                         <h4 class="font-bold text-[#0b5394] mt-2 mb-2">Automobile Liability:</h4>
                         <p class="text-sm text-gray-800"><strong class="font-semibold">Combined Single Limit:</strong><br>$1,000,000</p>
                     </div>
-                    <!-- Umbrella / Excess Liability -->
                     <div class="bg-[#e7f0fa] p-6 rounded-lg text-center">
                        <span class="material-symbols-outlined text-[#0b5394] text-[96px]">beach_access</span>
                         <h4 class="font-bold text-[#0b5394] mt-2 mb-2">Umbrella / Excess Liability:</h4>
@@ -278,13 +267,11 @@
                         <br>
                         <p class="text-sm text-gray-800"><strong class="font-semibold">Aggregate:</strong><br>$5,000,000</p>
                     </div>
-                    <!-- Workers' Compensation -->
                     <div class="bg-[#e7f0fa] p-6 rounded-lg text-center">
                        <span class="material-symbols-outlined text-[#0b5394] text-[96px]">health_and_safety</span>
                         <h4 class="font-bold text-[#0b5394] mt-2 mb-2">Workers' Compensation:</h4>
                         <p class="text-sm text-gray-800"><strong class="font-semibold">Each Accident:</strong><br>$1,000,000</p>
                     </div>
-                    <!-- Certificate of Insurance -->
                     <a href="https://drive.google.com/file/d/14_H2_yMVIVGAbp1yWLkm-QjwgFOyMYc1/view?usp=sharing" target="_blank" class="block bg-[#e7f0fa] p-6 rounded-lg text-center hover:shadow-lg transition-shadow flex flex-col items-center justify-center">
                         <span class="material-symbols-outlined text-[#0b5394] text-[96px]">description</span>
                         <p class="font-semibold text-[#0b5394] mt-4">Click here to view our most recent Certificate of Insurance (CoI).</p>
@@ -295,7 +282,6 @@
                 </div>
             </section>
             
-            <!-- Dynamic Content Sections -->
             <section id="project-overview" class="print-section-container">
                 <h2 class="text-3xl font-bold text-[#0b5394] border-b-2 border-[#0b5394] pb-2 mb-6">Project Overview</h2>
                 <div data-display="overview" class="space-y-4">
@@ -313,15 +299,15 @@
             
             <section id="project-estimate" class="print-section-container">
                  <h2 class="text-3xl font-bold text-[#0b5394] border-b-2 border-[#0b5394] pb-2 mb-6">Investment</h2>
-                 <p class="mb-6">Click the button below to access the official estimate from QuickBooks Online. From there, you can view, print, download, or approve the estimate directly.</p>
-                 <div class="mt-6 p-6 bg-[#e7f0fa] border-l-4 border-[#0b5394] rounded-r-lg">
+                 <p class="mb-6">The total project investment is detailed below. Click the button to review and approve the official estimate online.</p>
+                 <div class="mt-8 p-6 bg-[#e7f0fa] border-l-4 border-[#0b5394] rounded-r-lg">
                     <h4 class="font-bold text-[#0b5394]">Total Project Investment</h4>
                     <p data-display="investmentAmount" class="text-2xl font-bold text-[#094275]">[TOTAL AMOUNT FROM ESTIMATE]</p>
                     <p class="text-sm text-gray-600 mt-2">This price is valid for 30 days. Please refer to the official estimate for a complete breakdown of costs, payment schedule, and terms.</p>
                  </div>
-                 <div class="text-center my-8">
+                 <div class="text-center mt-8">
                     <a data-link="estimate" href="#" target="_blank" class="bg-[#0b5394] hover:bg-[#094275] text-white font-bold py-3 px-6 rounded-lg transition-colors text-lg inline-block shadow-md hover:shadow-lg">
-                        Review Estimate
+                        Review & Approve Estimate Online
                     </a>
                  </div>
             </section>
