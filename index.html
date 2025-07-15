@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -79,8 +80,7 @@
 
             /* Force desktop grid layouts to override mobile stacking */
             #why-us .grid,
-            #insurance .grid,
-            #acceptance .grid {
+            #insurance .grid {
                  display: grid !important;
                  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
                  gap: 1.5rem !important;
@@ -99,14 +99,23 @@
                 font-size: 2rem !important;
                 line-height: 2.5rem !important;
             }
-
-            /* Reduce font and icon sizes in specific sections to prevent overflow */
-            #why-us .grid p, #insurance .grid p {
-                font-size: 0.8rem !important;
-                line-height: 1.1rem !important;
+            
+            /* Prevent individual cards/boxes from splitting across pages */
+            .bg-\[\#e7f0fa\] {
+                page-break-inside: avoid !important;
             }
-            #insurance .grid .material-symbols-outlined {
-                font-size: 72px !important;
+
+            /* Reduce icon size and padding in print to fit content better */
+            .material-symbols-outlined {
+                font-size: 48px !important;
+            }
+            #why-us .bg-\[\#e7f0fa\],
+            #insurance .bg-\[\#e7f0fa\] {
+                padding: 1rem !important;
+            }
+            #why-us p.text-sm,
+            #insurance p.text-sm {
+                font-size: 0.75rem !important;
             }
             
             /* --- END OF FIXES --- */
@@ -154,6 +163,7 @@
             </div>
              <div>
                 <label for="clientCompany" class="block text-xl font-medium text-gray-300 text-center">Client Company Name</label>
+                <input type="block text-xl font-medium text-gray-300 text-center">Client Company Name</label>
                 <input type="text" id="clientCompany" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-[#0b5394] focus:border-[#0b5394]">
             </div>
              <div>
@@ -175,7 +185,8 @@
         </div>
 
         <div>
-            <label for="projectNotes" class="block text-xl font-medium text-gray-300 text-center">Your Project Notes for AI</label>
+            <div>
+                <label for="projectNotes" class="block text-xl font-medium text-gray-300 text-center">Your Project Notes for AI</label>
             <textarea id="projectNotes" rows="6" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-[#0b5394] focus:border-[#0b5394]" placeholder="e.g., Install 20 Cat6 drops, setup 3 conference rooms with Polycom systems..."></textarea>
         </div>
 
@@ -215,14 +226,14 @@
             
             <!-- Table of Contents -->
             <section id="table-of-contents" class="print-section-container">
-                <h2 class="text-3xl font-bold text-[#0b5394] border-b-2 border-[#0b5394] pb-2 mb-6">Table of Contents</h2>
+                <h2 class="text-3xl font-bold text-[#0b5394] border-b-2 border-[#b5394] pb-2 mb-6">Table of Contents</h2>
                 <ul class="list-disc list-inside space-y-3 text-xl">
                     <li><a href="#why-us" class="text-[#0b5394] hover:underline">Why Choose Layer-1 Technologies?</a></li>
                     <li><a href="#testimonials" class="text-[#0b5394] hover:underline">What Our Clients Say</a></li>
-                    <li><a href="#insurance" class="text-[#0b5394] hover:underline">Insurance</a></li>
+                    <li><li><a href="#insurance" class="text-[#0b5394] hover:underline">Insurance</a></a></li>
                     <li><a href="#project-overview" class="text-[#0b5394] hover:underline">Project Overview</a></li>
                     <li><a href="#scope-of-work" class="text-[#0b5394] hover:underline">Scope of Work</a></li>
-                    <li><a href="#project-estimate" class="text-[#0b5394] hover:underline">Investment</a></li>
+                    <li><li><a href="#project-estimate" class="text-[#0b5394] hover:underline">Investment</a></li>
                     <li><a href="#terms-of-acceptance" class="text-[#0b5394] hover:underline">Terms of Acceptance</a></li>
                     <li><a href="#acceptance" class="text-[#0b5394] hover:underline">Acceptance of Proposal</a></li>
                 </ul>
@@ -234,13 +245,13 @@
                 <div class="text-gray-800 space-y-8">
                     <p>Layer-1 Technologies is the trusted partner for designing and implementing mission-critical <strong>Technology Infrastructure</strong>, built upon a foundation of over 25 years of leadership experience in the field. We provide a holistic approach to your low-voltage needs, from foundational structured cabling to integrated audio/visual, security camera, and door access control systems. Our commitment is to build a reliable, scalable, and secure technological backbone that empowers your organization to thrive.</p>
                     <div class="grid md:grid-cols-2 gap-8 mb-8">
-                        <div class="bg-[#e7f0fa] p-6 rounded-lg hover:shadow-lg transition-shadow"><h3 class="font-bold text-xl mb-2 text-[#0b5394]">BICSI Certified Expertise</h3><p class="text-sm text-gray-800">Our team is <strong>BICSI certified</strong>, representing the gold standard in the information and communications technology industry. This certification is your assurance that every project is meticulously planned and executed according to the most stringent standards for quality, safety, and performance. It's not just about getting the job done; it's about getting it done right the first time.</p></div>
+                        <div class="bg-[#e7f0fa] p-6 rounded-lg hover:shadow-lg transition-shadow"><h3 class="font-bold text-xl mb-2 text-[#0b5394]">BICSI Certified Expertise</h3><p class="text-sm text-gray-800">Our team is <strong>BICSI certified</strong>, certified</strong>, representing the gold standard in the information and communications technology industry. This certification is your assurance that every project is meticulously planned and executed according to the most stringent standards for quality, safety, and performance. It's not just about getting the job done; it's about getting it done right the first time.</p></div>
                         <div class="bg-[#e7f0fa] p-6 rounded-lg hover:shadow-lg transition-shadow"><h3 class="font-bold text-xl mb-2 text-[#0b5394]">Proven Across Industries</h3><p class="text-sm text-gray-800">We have earned the trust of clients in the world's most demanding sectors, including global banking, healthcare, aerospace, advanced robotics, and insurance. Our experience in these high-stakes environments proves our ability to deliver robust and resilient infrastructure where security, reliability, and precision are non-negotiable.</p></div>
                     </div>
                     <div class="grid md:grid-cols-2 gap-8">
                         <div class="bg-[#e7f0fa] p-6 rounded-lg hover:shadow-lg transition-shadow"><h3 class="font-bold text-xl mb-2 text-[#0b5394]">Commitment to Quality</h3><p class="text-sm text-gray-800">We use only high-grade materials and employ experienced, skilled tradespeople to ensure every detail of your project is executed to the highest standard.</p></div>
                         <div class="bg-[#e7f0fa] p-6 rounded-lg hover:shadow-lg transition-shadow"><h3 class="font-bold text-xl mb-2 text-[#0b5394]">Transparent Communication</h3><p class="text-sm text-gray-800">You will receive regular updates from a dedicated project manager. We believe in clear, proactive communication to ensure you are always informed.</p></div>
-                        <div class="bg-[#e7f0fa] p-6 rounded-lg hover:shadow-lg transition-shadow"><h3 class="font-bold text-xl mb-2 text-[#0b5394]">On Time & On Budget</h3><p class="text-sm text-gray-800">We pride ourselves on efficient project management to deliver a project as quoted and within the agreed-upon timeline. No surprises.</p></div>
+                        <div class="bg-[#e7f0fa] p-6 rounded-lg hover:shadow-lg transition-shadow"><h3 class="font-bold text-xl mb-2 text-[#0b5394]">On Time & On Budget</h3><p class="text-sm text-gray-800">We pride ourselves on efficient project management to deliver projects as quoted and within the agreed-upon timeline. No surprises.</p></div>
                         <div class="bg-[#e7f0fa] p-6 rounded-lg hover:shadow-lg transition-shadow"><h3 class="font-bold text-xl mb-2 text-[#0b5394]">Safety First</h3><p class="text-sm text-gray-800">We maintain a rigorous safety program to protect our crew, our clients, and their property throughout the construction process.</p></div>
                     </div>
                 </div>
@@ -250,7 +261,7 @@
                 <div class="space-y-12">
                     <div class="bg-[#e7f0fa] p-6 rounded-lg border-l-4 border-gray-200"><p class="text-sm text-gray-800 italic">"Layer-1 Technologies has been an absolute pleasure to work with over the years. Their team is incredibly knowledgeable, professional, and always goes above and beyond... I always know that when Layer-1 is on the job, everything will be done to the highest standard... They have been a trusted partner since 2014, and I can't recommend them highly enough!"</p><p class="text-right font-semibold text-gray-800 mt-4">- Sandy Roy, Director of Operations<br><span class="font-normal text-sm">Kuper Sotheby’s International Realty</span></p></div>
                     <div class="bg-[#e7f0fa] p-6 rounded-lg border-l-4 border-gray-200"><p class="text-sm text-gray-800 italic">“Layer-1 Technologies has expertly managed a wide range of our technology needs—from ground-up network & structured cabling and audio/video installs at our Austin HQ to large-scale rewiring projects and nationwide pharmacy expansions. Their professionalism, prompt communication, and deep technical expertise consistently ensure that each deployment meets our timelines and quality standards.”</p><p class="text-right font-semibold text-gray-800 mt-4">- Richard Torrez, Network Engineer V<br><span class="font-normal text-sm">Curative</span></p></div>
-                    <div class="bg-[#e7f0fa] p-6 rounded-lg border-l-4 border-gray-200"><p class="text-sm text-gray-800 italic">“I am writing to recommend Layer-1 Technologies for your structured cabling needs... Layer-1 demonstrated excellent technical skills, completing the installation efficiently and flawlessly. They were also highly reliable, adhering to the project timeline and budget... I highly recommend Layer-1 Technology without reservation and plan on using them for our future needs. They are a top-notch cabling provider.”</p><p class="text-right font-semibold text-gray-800 mt-4">- JP Hale, Director of Technology<br><span class="font-normal text-sm">Hyde Park Schools</span></p></div>
+                    <div class="bg-[#e7f0fa] p-6 rounded-lg border-l-4 border-gray-200"><p class="text-sm text-gray-800 italic">“I am writing to recommend Layer-1 Technologies for your structured cabling needs... Layer-1 demonstrated excellent technical skills, completing the installation efficiently and flawlessly. They were also highly reliable, adhering to the project timeline and budget... I highly recommend Layer-1 Technologies without reservation and plan on using them for our future needs. They are a top-notch cabling provider.”</p><p class="text-right font-semibold text-gray-800 mt-4">- JP Hale, Director of Technology<br><span class="font-normal text-sm">Hyde Park Schools</span></p></div>
                 </div>
             </section>
             <section id="insurance" class="print-section-container">
@@ -285,7 +296,7 @@
                         <h4 class="font-bold text-[#0b5394] mt-2 mb-2">Umbrella / Excess Liability:</h4>
                         <p class="text-sm text-gray-800"><strong class="font-semibold">Each Occurrence:</strong><br>$5,000,000</p>
                         <br>
-                        <p class="text-sm text-gray-800"><strong class="font-semibold">Aggregate:</strong><br>$5,000,000</p>
+                        <p class="text-sm text-gray-gray800"><strong class="font-semibold">Aggregate:</strong><br>$5,000,000</p>
                     </div>
                     <!-- Workers' Compensation -->
                     <div class="bg-[#e7f0fa] p-6 rounded-lg text-center">
@@ -587,7 +598,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showSuccess(button, originalText) {
             const originalClasses = button.className;
             button.textContent = '✓ Done!';
-            button.className = button.className.replace(/bg-[\w-]+/, 'bg-green-500').replace(/hover:bg-[\w-]+/, 'hover:bg-green-600');
+            button.className = button.className.replace(/bg-\w+/, 'bg-green-500').replace(/hover:bg-\w+/, 'hover:bg-green-600');
             setTimeout(() => {
                 button.textContent = originalText;
                 button.className = originalClasses;
@@ -603,3 +614,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+```
