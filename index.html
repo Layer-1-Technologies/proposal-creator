@@ -526,7 +526,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             try {
                 // This relative path works on the deployed site. It may fail in some local preview environments.
-                const response = await fetch('/api/generate', { 
+                const response = await fetch('/.netlify/functions/generate', { 
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ prompt }) // Send the prompt to your backend
