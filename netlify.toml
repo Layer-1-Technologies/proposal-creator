@@ -1,6 +1,7 @@
 [build]
   functions = "netlify/functions"
 
+# We keep this for backward compatibility, but index.html now bypasses it
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
