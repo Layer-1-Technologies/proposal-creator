@@ -28,6 +28,20 @@
              color: white !important;
         }
         
+        /* Pulse animation for retry status */
+        @keyframes pulse-amber {
+            0%, 100% { background-color: #fffbeb; border-color: #fcd34d; }
+            50% { background-color: #fef3c7; border-color: #f59e0b; }
+        }
+        .status-retry {
+            animation: pulse-amber 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            color: #b45309; /* Amber-700 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-width: 2px;
+            font-weight: 500;
+        }
+
         /* Spacing for screen view */
         @media screen {
             .proposal-body section:not(:last-child) {
@@ -278,13 +292,13 @@
                         </div>
                         <!-- Automobile Liability -->
                         <div class="bg-[#e7f0fa] p-6 rounded-lg text-center">
-                           <span class="material-symbols-outlined text-[#0b5394] text-[96px]">local_shipping</span>
+                            <span class="material-symbols-outlined text-[#0b5394] text-[96px]">local_shipping</span>
                             <h4 class="font-bold text-[#0b5394] mt-2 mb-2">Automobile Liability:</h4>
                             <p class="text-sm text-gray-800"><strong class="font-semibold">Combined Single Limit:</strong><br>$1,000,000</p>
                         </div>
                         <!-- Umbrella / Excess Liability -->
                         <div class="bg-[#e7f0fa] p-6 rounded-lg text-center">
-                           <span class="material-symbols-outlined text-[#0b5394] text-[96px]">beach_access</span>
+                            <span class="material-symbols-outlined text-[#0b5394] text-[96px]">beach_access</span>
                             <h4 class="font-bold text-[#0b5394] mt-2 mb-2">Umbrella / Excess Liability:</h4>
                             <p class="text-sm text-gray-800"><strong class="font-semibold">Each Occurrence:</strong><br>$5,000,000</p>
                             <br>
@@ -292,7 +306,7 @@
                         </div>
                         <!-- Workers' Compensation -->
                         <div class="bg-[#e7f0fa] p-6 rounded-lg text-center">
-                           <span class="material-symbols-outlined text-[#0b5394] text-[96px]">health_and_safety</span>
+                            <span class="material-symbols-outlined text-[#0b5394] text-[96px]">health_and_safety</span>
                             <h4 class="font-bold text-[#0b5394] mt-2 mb-2">Workers' Compensation:</h4>
                             <p class="text-sm text-gray-800"><strong class="font-semibold">Each Accident:</strong><br>$1,000,000</p>
                         </div>
@@ -381,14 +395,17 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     
+    // Global environment variables provided by the Canvas runtime
+    const apiKey = ""; 
+    const modelName = "gemini-2.5-flash-preview-09-2025";
+    const apiUrlBase = "https://generativelanguage.googleapis.com/v1beta/models/";
+    const apiUrl = `${apiUrlBase}${modelName}:generateContent?key=${apiKey}`;
+
     /**
      * ProposalApp Module
-     * Encapsulates all logic for the proposal generator to keep the global namespace clean
-     * and make the code more organized and maintainable.
      */
     const ProposalApp = {
         // --- STATE ---
-        // A central place to hold all the data for the application.
         state: {
             projectName: '',
             estimateNumber: '',
@@ -401,7 +418,6 @@ document.addEventListener('DOMContentLoaded', () => {
         },
 
         // --- DOM ELEMENTS ---
-        // A structured object to hold references to all necessary DOM elements.
         elements: {
             inputs: {
                 projectName: document.getElementById('projectName'),
@@ -418,25 +434,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 sampleData: document.getElementById('sampleDataBtn'),
                 finalize: document.getElementById('finalizeBtn'),
             },
-            // Using data attributes for display makes it clearer what these elements are for.
             displays: document.querySelectorAll('[data-display]'),
             links: document.querySelectorAll('[data-link="estimate"]'),
         },
 
         // --- METHODS ---
         
-        /**
-         * Initializes the application by setting up event listeners.
-         */
         init() {
             this.elements.buttons.sampleData.addEventListener('click', () => this.fillWithSampleData());
             this.elements.buttons.populate.addEventListener('click', () => this.populateProposal());
             this.elements.buttons.finalize.addEventListener('click', () => window.print());
         },
 
-        /**
-         * Collects all values from the input fields and stores them in the state object.
-         */
         collectInputValues() {
             for (const key in this.elements.inputs) {
                 if (this.elements.inputs.hasOwnProperty(key)) {
@@ -445,12 +454,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         },
 
-        /**
-         * Updates all display elements and links in the proposal from the state object.
-         * This is a single point of truth for UI updates, making it much cleaner.
-         */
         updateDisplay() {
-            // Update all elements with a `data-display` attribute
             this.elements.displays.forEach(el => {
                 const key = el.dataset.display;
                 let value = this.state[key] || `[${key.toUpperCase()}]`;
@@ -463,17 +467,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (key === 'date') {
                     value = new Date().toLocaleDateString('en-US');
                 } else if (key === 'overview' || key === 'scope') {
-                    el.innerHTML = value || '<p>Generating content...</p>';
-                    return; // Skip textContent assignment for HTML content
+                    // Skip these as they are updated by generateContent
+                    if(el.innerHTML.includes('Generating')) return; 
+                    return; 
                 }
 
                 el.textContent = value;
             });
 
-            // Update all links with a `data-link` attribute
             this.elements.links.forEach(link => {
                 const url = this.state.estimateUrl;
-
                 if (url) {
                     link.href = url;
                     link.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -485,13 +488,57 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
             
-            // Update page title
             document.title = `Layer-1 | Proposal ${this.state.estimateNumber} | ${this.state.clientCompany}`;
         },
         
         /**
-         * Calls the backend API to generate proposal content.
+         * Robust fetch with exponential backoff for rate limiting.
          */
+        async fetchWithBackoff(payload, maxRetries = 5, initialDelay = 1000, onRetry) {
+            let currentDelay = initialDelay;
+
+            for (let attempt = 0; attempt < maxRetries; attempt++) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.ok) {
+                        return await response.json();
+                    }
+
+                    // Check for rate limit (429) or Service Unavailable (503)
+                    if (response.status === 429 || response.status === 503) {
+                        const isLastAttempt = attempt === maxRetries - 1;
+                        if (isLastAttempt) {
+                            throw new Error(`Server is too busy. Failed after ${maxRetries} attempts (Status: ${response.status}).`);
+                        }
+
+                        // Notify UI of retry
+                        const waitSeconds = currentDelay / 1000;
+                        if (onRetry) onRetry(attempt + 1, waitSeconds);
+
+                        // Wait
+                        await new Promise(resolve => setTimeout(resolve, currentDelay));
+                        
+                        // Exponential backoff
+                        currentDelay *= 2;
+                        continue;
+                    } 
+                    
+                    const errorBody = await response.text();
+                    throw new Error(`API Error ${response.status}: ${errorBody.substring(0, 100)}`);
+
+                } catch (error) {
+                    if (attempt === maxRetries - 1 || !error.message.includes('Server is too busy')) {
+                        throw error;
+                    }
+                }
+            }
+        },
+
         async generateContent() {
             const { projectNotes, clientCompany, projectName } = this.state;
             const overviewEl = document.querySelector('[data-display="overview"]');
@@ -503,8 +550,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            overviewEl.innerHTML = '<p>Generating overview... please wait.</p>';
-            scopeEl.innerHTML = '<li>Generating scope... please wait.</li>';
+            // Initial Loading State
+            overviewEl.innerHTML = '<p class="text-[#0b5394] animate-pulse">Generating overview... please wait.</p>';
+            scopeEl.innerHTML = '<li class="text-[#0b5394] animate-pulse">Generating scope... please wait.</li>';
 
             const prompt = `
                 You are a proposal writer for Layer-1 Technologies. Based on the notes below, generate two sections of a proposal: an "Overview" and a "Scope of Work".
@@ -524,21 +572,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${projectNotes}
                 ---`;
             
-            try {
-                // This relative path works on the deployed site. It may fail in some local preview environments.
-                const response = await fetch('/api/generate', { 
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt }) // Send the prompt to your backend
-                });
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }]
+            };
 
-                if (!response.ok) {
-                    throw new Error(`API call failed with status: ${response.status}.`);
-                }
+            // Retry Callback to update UI during waits
+            const onRetry = (attempt, waitSeconds) => {
+                const msg = `<div class="status-retry">⚠️ High Traffic (Rate Limit Hit). Pausing for ${waitSeconds}s before attempt ${attempt + 1}...</div>`;
+                overviewEl.innerHTML = msg;
+                scopeEl.innerHTML = msg;
+            };
+
+            try {
+                // Use the new backoff function
+                const result = await this.fetchWithBackoff(payload, 5, 1000, onRetry);
                 
-                const result = await response.json();
-                
-                // Assuming the backend forwards the Gemini response structure
                 if (result.candidates && result.candidates.length > 0) {
                     const rawText = result.candidates[0].content.parts[0].text;
                     const cleanedText = rawText.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim();
@@ -553,14 +601,11 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) {
                 console.error('Error fetching or parsing API data:', error);
                 const errorMessage = `An error occurred: ${error.message}. Check the console for details.`;
-                overviewEl.innerHTML = `<p class="text-red-500">${errorMessage}</p>`;
-                scopeEl.innerHTML = `<li><strong class="text-red-500">${errorMessage}</strong></li>`;
+                overviewEl.innerHTML = `<p class="text-red-500 bg-red-100 p-4 rounded">${errorMessage}</p>`;
+                scopeEl.innerHTML = `<li class="text-red-500 bg-red-100 p-4 rounded list-none">${errorMessage}</li>`;
             }
         },
         
-        /**
-         * Main function to trigger the proposal population process.
-         */
         populateProposal() {
             this.collectInputValues();
             this.updateDisplay();
@@ -568,9 +613,6 @@ document.addEventListener('DOMContentLoaded', () => {
             this.showSuccess(this.elements.buttons.populate, "Analyze & Populate Proposal");
         },
 
-        /**
-         * Fills the form with sample data for testing purposes.
-         */
         fillWithSampleData() {
             this.elements.inputs.projectName.value = "New Office Technology Infrastructure Setup";
             this.elements.inputs.estimateNumber.value = "21497";
@@ -583,11 +625,6 @@ document.addEventListener('DOMContentLoaded', () => {
             this.showSuccess(this.elements.buttons.sampleData, "Fill with Sample Data (Testing)");
         },
         
-        /**
-         * Provides visual feedback on a button after a successful action.
-         * @param {HTMLElement} button - The button element to modify.
-         * @param {string} originalText - The original text of the button.
-         */
         showSuccess(button, originalText) {
             const originalClasses = button.className;
             button.textContent = '✓ Done!';
@@ -599,11 +636,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Start the application
     ProposalApp.init();
-
 });
 </script>
 
 </body>
 </html>
+
