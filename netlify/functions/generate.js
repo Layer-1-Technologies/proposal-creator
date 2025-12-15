@@ -14,14 +14,23 @@ exports.handler = async function(event, context) {
   }
 
   // 3. Get the prompt from the request body sent by the frontend
-  const { prompt } = JSON.parse(event.body);
+  let prompt;
+  try {
+    const body = JSON.parse(event.body);
+    prompt = body.prompt;
+  } catch (e) {
+    return { statusCode: 400, body: 'Invalid JSON in request body.' };
+  }
 
   if (!prompt) {
       return { statusCode: 400, body: 'No prompt provided.' };
   }
 
   // 4. Prepare the request to the real Gemini API
-  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+  // CHANGE: Switched from 'gemini-2.0-flash' to 'gemini-1.5-flash' for better stability and free-tier limits.
+  const modelName = 'gemini-1.5-flash';
+  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${GEMINI_API_KEY}`;
+  
   const payload = {
       contents: [{
           role: "user",
@@ -40,8 +49,13 @@ exports.handler = async function(event, context) {
     if (!response.ok) {
       // If the API call fails, pass the error back to the frontend
       const errorBody = await response.text();
-      console.error('Gemini API Error:', errorBody);
-      return { statusCode: response.status, body: errorBody };
+      console.error(`Gemini API Error (${response.status}):`, errorBody);
+      
+      // Return a clean error message to the frontend
+      return { 
+        statusCode: response.status, 
+        body: JSON.stringify({ error: `API Error: ${response.status}`, details: errorBody }) 
+      };
     }
 
     const data = await response.json();
