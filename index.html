@@ -395,11 +395,9 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Global environment variables provided by the Canvas runtime
-    const apiKey = ""; 
-    const modelName = "gemini-2.5-flash-preview-09-2025";
-    const apiUrlBase = "https://generativelanguage.googleapis.com/v1beta/models/";
-    const apiUrl = `${apiUrlBase}${modelName}:generateContent?key=${apiKey}`;
+    // RESTORED: Backend Proxy Endpoint
+    // This connects to the endpoint that works with your setup, fixing the 403 error.
+    const apiUrl = '/api/generate'; 
 
     /**
      * ProposalApp Module
@@ -505,11 +503,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         body: JSON.stringify(payload)
                     });
 
-                    if (response.ok) {
-                        return await response.json();
-                    }
-
-                    // Check for rate limit (429) or Service Unavailable (503)
+                    // Check for rate limit (429) or Service Unavailable (503) from the backend
+                    // Note: Your backend might pass through the 429 from Google or generate its own.
                     if (response.status === 429 || response.status === 503) {
                         const isLastAttempt = attempt === maxRetries - 1;
                         if (isLastAttempt) {
@@ -527,6 +522,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         currentDelay *= 2;
                         continue;
                     } 
+                    
+                    if (response.ok) {
+                        return await response.json();
+                    }
                     
                     const errorBody = await response.text();
                     throw new Error(`API Error ${response.status}: ${errorBody.substring(0, 100)}`);
@@ -572,9 +571,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${projectNotes}
                 ---`;
             
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }]
-            };
+            // Reverted Payload format to match original ({ prompt: ... })
+            const payload = { prompt: prompt };
 
             // Retry Callback to update UI during waits
             const onRetry = (attempt, waitSeconds) => {
@@ -587,6 +585,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Use the new backoff function
                 const result = await this.fetchWithBackoff(payload, 5, 1000, onRetry);
                 
+                // Assuming your backend passes through the Gemini "candidates" structure
                 if (result.candidates && result.candidates.length > 0) {
                     const rawText = result.candidates[0].content.parts[0].text;
                     const cleanedText = rawText.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim();
