@@ -1,66 +1,59 @@
-// File: netlify/functions/generate.js
-
 exports.handler = async function(event, context) {
   // 1. Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  // 2. Get the API key from secure environment variables
+  // 2. Get the API key
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-
   if (!GEMINI_API_KEY) {
-    return { statusCode: 500, body: 'API key is not set on the server.' };
+    return { statusCode: 500, body: JSON.stringify({ error: 'API key is missing.' }) };
   }
 
-  // 3. Get the prompt from the request body sent by the frontend
+  // 3. Parse the body safely
   let prompt;
   try {
     const body = JSON.parse(event.body);
     prompt = body.prompt;
   } catch (e) {
-    return { statusCode: 400, body: 'Invalid JSON in request body.' };
+    return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON body' }) };
   }
 
   if (!prompt) {
-      return { statusCode: 400, body: 'No prompt provided.' };
+    return { statusCode: 400, body: JSON.stringify({ error: 'No prompt provided' }) };
   }
 
-  // 4. Prepare the request to the real Gemini API
-  // CHANGE: Switched from 'gemini-2.0-flash' to 'gemini-1.5-flash' for better stability and free-tier limits.
-  const modelName = 'gemini-1.5-flash';
-  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${GEMINI_API_KEY}`;
+  // 4. PREPARE REQUEST - SWITCHING TO STABLE MODEL 1.5
+  const model = "gemini-1.5-flash"; 
+  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
   
   const payload = {
-      contents: [{
-          role: "user",
-          parts: [{ text: prompt }]
-      }]
+    contents: [{
+      role: "user",
+      parts: [{ text: prompt }]
+    }]
   };
 
   try {
-    // 5. Make the secure call to the Gemini API from the server
     const response = await fetch(apiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
 
+    // 5. Handle API Errors (like 429 or 500 from Google)
     if (!response.ok) {
-      // If the API call fails, pass the error back to the frontend
-      const errorBody = await response.text();
-      console.error(`Gemini API Error (${response.status}):`, errorBody);
-      
-      // Return a clean error message to the frontend
+      const errorText = await response.text();
+      console.error(`Gemini API Error (${response.status}):`, errorText);
       return { 
         statusCode: response.status, 
-        body: JSON.stringify({ error: `API Error: ${response.status}`, details: errorBody }) 
+        body: JSON.stringify({ error: `Gemini API Error: ${response.status}`, details: errorText }) 
       };
     }
 
     const data = await response.json();
 
-    // 6. Return the successful response to your frontend
+    // 6. Success
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
@@ -68,7 +61,7 @@ exports.handler = async function(event, context) {
     };
 
   } catch (error) {
-    console.error('Error in serverless function:', error);
+    console.error('Server function error:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message })
