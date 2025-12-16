@@ -15,6 +15,7 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
+            font-size: 1rem; /* Default font size for screen */
         }
         .cover-bg {
             background-color: #000000;
@@ -420,11 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
         init() {
             this.elements.buttons.sampleData.addEventListener('click', () => this.fillWithSampleData());
             this.elements.buttons.populate.addEventListener('click', () => this.populateProposal());
-            this.elements.buttons.finalize.addEventListener('click', () => { /* Changed to html2pdf for filename */
-                const element = document.querySelector('.print-full-bleed');
-                const filename = `Layer-1 Technologies - Proposal # ${this.state.estimateNumber} - ${this.state.clientCompany}.pdf`;
-                html2pdf().from(element).save(filename);
-            });
+            this.elements.buttons.finalize.addEventListener('click', () => this.exportToPDF()); /* Changed to new method */
         },
         /**
          * Collects all values from the input fields and stores them in the state object.
@@ -527,28 +524,6 @@ document.addEventListener('DOMContentLoaded', () => {
                    
                     overviewEl.innerHTML = content.overview || '<p class="text-red-500">Error: Failed to parse overview.</p>';
                     scopeEl.innerHTML = content.scope || '<li><strong class="text-red-500">Error:</strong> Failed to parse scope.</li>';
-                    
-                    // Adjust font for overview/scope fit /* Added for dynamic fit */
-                    const pageHeight = 900; // Approx print content height
-                    const overviewSection = document.getElementById('project-overview');
-                    const scopeSection = document.getElementById('scope-of-work');
-                    let fontSize = 14;
-                    let combinedHeight = overviewSection.offsetHeight + scopeSection.offsetHeight;
-                    if (combinedHeight > pageHeight) {
-                        while (fontSize >= 10 && combinedHeight > pageHeight) {
-                            fontSize -= 0.5;
-                            overviewSection.querySelector('[data-display="overview"]').style.fontSize = `${fontSize}px`;
-                            scopeSection.querySelector('p').style.fontSize = `${fontSize}px`;
-                            scopeSection.querySelector('ul').style.fontSize = `${fontSize}px`;
-                            combinedHeight = overviewSection.offsetHeight + scopeSection.offsetHeight;
-                        }
-                        if (fontSize < 10) {
-                            scopeSection.style.pageBreakBefore = 'always';
-                            overviewSection.querySelector('[data-display="overview"]').style.fontSize = '14px';
-                            scopeSection.querySelector('p').style.fontSize = '14px';
-                            scopeSection.querySelector('ul').style.fontSize = '14px';
-                        }
-                    }
                 } else {
                      throw new Error("No content generated from API.");
                 }
@@ -582,6 +557,56 @@ document.addEventListener('DOMContentLoaded', () => {
             this.elements.inputs.estimateUrl.value = "https://connect.intuit.com/portal/app/CommerceNetwork/view/scs-v1-875bdd9c569f4fc9a48b838a8af616421f2329d4337145cc95d84be57dbe95bdaeb462237a32414f9dc9017ed52ee4e6?locale=en_US";
             this.elements.inputs.projectNotes.value = "Full technology infrastructure build-out for a new 5,000 sq ft office space. Scope includes: 48 Cat6a network drops for workstations and VoIP phones. Installation of a new server rack in the designated IT closet, including patch panels and cable management. Setup of two conference rooms with Polycom video conferencing systems and 75-inch displays. Installation of 8 ceiling-mounted Wi-Fi 6 access points. Setup of a 10-camera security system covering all entry points and main office areas. Door access control system for the main entrance and server room using key fobs.";
             this.showSuccess(this.elements.buttons.sampleData, "Fill with Sample Data (Testing)");
+        },
+       
+        /**
+         * Exports to PDF with temporary adjustments.
+         */
+        exportToPDF() {
+            this.collectInputValues(); // Ensure latest data
+            const body = document.body;
+            const overviewSection = document.getElementById('project-overview');
+            const scopeSection = document.getElementById('scope-of-work');
+            const overviewContent = overviewSection.querySelector('[data-display="overview"]');
+            const scopeP = scopeSection.querySelector('p');
+            const scopeUl = scopeSection.querySelector('ul');
+            const originalOverviewFont = overviewContent.style.fontSize;
+            const originalScopePFont = scopeP.style.fontSize;
+            const originalScopeUlFont = scopeUl.style.fontSize;
+            const originalScopeBreak = scopeSection.style.pageBreakBefore;
+            
+            body.classList.add('pdf-export'); // If needed for other styles
+            
+            // Adjust font for overview/scope fit /* Temporary for PDF */
+            const pageHeight = 900; // Approx print content height
+            let fontSize = 14;
+            let combinedHeight = overviewSection.offsetHeight + scopeSection.offsetHeight;
+            if (combinedHeight > pageHeight) {
+                while (fontSize >= 10 && combinedHeight > pageHeight) {
+                    fontSize -= 0.5;
+                    overviewContent.style.fontSize = `${fontSize}px`;
+                    scopeP.style.fontSize = `${fontSize}px`;
+                    scopeUl.style.fontSize = `${fontSize}px`;
+                    combinedHeight = overviewSection.offsetHeight + scopeSection.offsetHeight;
+                }
+                if (fontSize < 10) {
+                    scopeSection.style.pageBreakBefore = 'always';
+                    overviewContent.style.fontSize = '14px';
+                    scopeP.style.fontSize = '14px';
+                    scopeUl.style.fontSize = '14px';
+                }
+            }
+            
+            const element = document.querySelector('.print-full-bleed');
+            const filename = `Layer-1 Technologies - Proposal # ${this.state.estimateNumber} - ${this.state.clientCompany}.pdf`;
+            html2pdf().from(element).save(filename).then(() => {
+                // Reset after export
+                body.classList.remove('pdf-export');
+                overviewContent.style.fontSize = originalOverviewFont;
+                scopeP.style.fontSize = originalScopePFont;
+                scopeUl.style.fontSize = originalScopeUlFont;
+                scopeSection.style.pageBreakBefore = originalScopeBreak;
+            });
         },
        
         /**
