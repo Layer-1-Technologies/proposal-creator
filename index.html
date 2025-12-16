@@ -10,12 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Google Material Symbols -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <!-- html2pdf for custom PDF export --> <!-- Added for filename control -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            font-size: 1rem; /* Default font size for screen */
         }
         .cover-bg {
             background-color: #000000;
@@ -30,13 +27,14 @@
         .assistant-header {
              color: white !important;
         }
-       
+        
         /* Spacing for screen view */
         @media screen {
             .proposal-body section:not(:last-child) {
                 margin-bottom: 3rem;
             }
         }
+
         /* Print-specific styles */
         @media print {
             .no-print {
@@ -60,7 +58,7 @@
             /* Push each section to a new page when printing */
             .proposal-body section {
                 page-break-before: always;
-                padding-top: 0.25in;
+                padding-top: 0.25in; 
             }
             /* The first section (TOC) doesn't need a break before it */
             .proposal-body section:first-of-type {
@@ -71,15 +69,16 @@
                 page-break-after: always; /* Ensure content after it starts on a new page */
                 background-color: #000000 !important;
             }
-           
+            
             /* --- FINAL PRINT-SPECIFIC FIXES --- */
-           
+            
             /* Prevent sections from breaking across pages */
             .print-section-container {
                 page-break-inside: avoid !important;
                 display: inline-block !important; /* Stronger command to keep together */
                 width: 100% !important;
             }
+
             /* Force desktop grid layouts to override mobile stacking */
             #why-us .grid,
             #insurance .grid,
@@ -88,7 +87,7 @@
                  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
                  gap: 1rem !important;
             }
-           
+            
             /* Ensure alignment is correct for specific sections */
             #insurance .text-center {
                 text-align: center !important;
@@ -96,26 +95,24 @@
             #testimonials .text-right {
                 text-align: right !important;
             }
+
             /* Double the font size for TOC items */
             #table-of-contents li a {
                 font-size: 1.5rem !important; /* Adjusted for better fit */
                 line-height: 2rem !important;
             }
-            /* Remove font reductions to allow filling */ /* Updated for fill */
+
+            /* Reduce font and icon sizes in specific sections to prevent overflow */
             #why-us .grid p, #insurance .grid p {
-                font-size: 14px !important;
-                line-height: 1.5rem !important;
+                font-size: 0.8rem !important;
+                line-height: 1.1rem !important;
             }
             #insurance .grid .material-symbols-outlined {
-                font-size: 96px !important; /* Kept for visibility */
+                font-size: 64px !important;
             }
-           
-            /* Avoid page breaks for grouped sections */ /* Added for grouping */
-            #why-us, #scope-of-work, #terms-of-acceptance, #acceptance {
-                page-break-before: avoid !important;
-            }
-           
+            
             /* --- END OF FIXES --- */
+
             /* Define the footer area and page margins for paged media */
             @page {
                 size: letter;
@@ -129,6 +126,7 @@
                     vertical-align: top;
                 }
             }
+
             /* Special rule for the first page (cover) */
             @page :first {
                 margin: 0 !important; /* No margin for the cover page */
@@ -140,11 +138,12 @@
     </style>
 </head>
 <body class="bg-gray-100">
+
     <!-- Gemini API Proposal Assistant (This section will not be printed) -->
     <div class="no-print max-w-4xl mx-auto my-8 p-6 bg-gray-800 text-white rounded-lg shadow-2xl">
         <h2 class="text-2xl font-bold mb-4 border-b border-[#0b5394] pb-2 assistant-header">✨ Proposal Assistant (For Internal Use)</h2>
         <p class="mb-6 text-gray-300">Fill out the fields below, then use the buttons to generate and finalize your proposal.</p>
-       
+        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 mb-4">
             <!-- Input fields are grouped for easier management by JS -->
             <div data-input-group>
@@ -176,23 +175,27 @@
                 <input type="url" id="estimateUrl" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-[#0b5394] focus:border-[#0b5394]" placeholder="https://qbo.intuit.com/...">
             </div>
         </div>
+
         <div>
             <label for="projectNotes" class="block text-xl font-medium text-gray-300 text-center">Your Project Notes for AI</label>
             <textarea id="projectNotes" rows="6" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-[#0b5394] focus:border-[#0b5394]" placeholder="e.g., Install 20 Cat6 drops, setup 3 conference rooms with Polycom systems..."></textarea>
         </div>
+
         <div class="space-y-4 mt-6">
             <button id="populateBtn" class="w-full bg-[#0b5394] hover:bg-[#094275] text-white font-bold py-2 px-4 rounded-lg transition-colors">Analyze & Populate Proposal</button>
             <button id="sampleDataBtn" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">Fill with Sample Data (Testing)</button>
         </div>
-       
+        
         <div class="border-t border-gray-600 mt-6 pt-4">
             <button id="finalizeBtn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">Finalize & Export as PDF</button>
         </div>
     </div>
+
+
     <div class="max-w-4xl mx-auto bg-white shadow-2xl print-full-bleed">
-        <!-- Cover Page --> <!-- Adjusted padding for full fill -->
-        <div class="cover-bg relative text-white min-h-screen flex flex-col items-center justify-center p-4 text-center"> <!-- Reduced p-8 to p-4 -->
-            <div class="bg-black bg-opacity-50 p-6 rounded-lg"> <!-- Reduced p-10 to p-6 -->
+        <!-- Cover Page -->
+        <div class="cover-bg relative text-white min-h-screen flex flex-col items-center justify-center p-8 text-center">
+            <div class="bg-black bg-opacity-50 p-10 rounded-lg">
                 <img src="https://www.layer-1.com/wp-content/uploads/2025/06/Layer-1-Logo-_-Black-_-300-x-300.png" alt="Layer-1 Technologies Logo" class="mx-auto h-96 w-96 mb-6" onerror="this.style.display='none'">
                 <h1 class="text-6xl font-thin tracking-tight">LAYER-1 TECHNOLOGIES</h1>
                 <p class="text-2xl mt-4 font-light">Project Proposal</p>
@@ -208,9 +211,10 @@
                 <p class="text-sm">500 East 4th Street, #254, Austin, TX 78701 | (844) 229-2783 | <a href="https://www.Layer-1.com" target="_blank" class="text-[#a8c7fa] hover:text-white">Layer-1.com</a></p>
             </div>
         </div>
+
         <!-- Proposal Body -->
         <div class="p-8 md:p-12 proposal-body text-gray-800">
-           
+            
             <!-- Table of Contents -->
             <section id="table-of-contents" class="print-section-container">
                 <h2 class="text-3xl font-bold text-[#0b5394] border-b-2 border-[#0b5394] pb-2 mb-6">Table of Contents</h2>
@@ -225,9 +229,9 @@
                     <li><a href="#acceptance" class="text-[#0b5394] hover:underline">Acceptance of Proposal</a></li>
                 </ul>
             </section>
-           
-            <!-- Static Content Sections --> <!-- Added min-h for fill -->
-            <section id="why-us" class="print-section-container min-h-[80vh]">
+            
+            <!-- Static Content Sections -->
+            <section id="why-us" class="print-section-container">
                 <h2 class="text-3xl font-bold text-[#0b5394] border-b-2 border-[#0b5394] pb-2 mb-6">Why Choose Layer-1 Technologies?</h2>
                 <div class="text-gray-800 space-y-8">
                     <p>Layer-1 Technologies is the trusted partner for designing and implementing mission-critical <strong>Technology Infrastructure</strong>, built upon a foundation of over 25 years of leadership experience in the field. We provide a holistic approach to your low-voltage needs, from foundational structured cabling to integrated audio/visual, security camera, and door access control systems. Our commitment is to build a reliable, scalable, and secure technological backbone that empowers your organization to thrive.</p>
@@ -245,13 +249,13 @@
             </section>
             <section id="testimonials" class="print-section-container">
                 <div class="mb-6"><h2 class="text-3xl font-bold text-[#0b5394] border-b-2 border-[#0b5394] pb-2">What Our Clients Say</h2><p class="text-[10px] text-gray-500 mt-1 italic">Additional references and a comprehensive list of testimonials are available upon request.</p></div>
-                <div class="space-y-16"> <!-- Increased for fill -->
+                <div class="space-y-12">
                     <div class="bg-[#e7f0fa] p-6 rounded-lg border-l-4 border-gray-200"><p class="text-sm text-gray-800 italic">"Layer-1 Technologies has been an absolute pleasure to work with over the years. Their team is incredibly knowledgeable, professional, and always goes above and beyond... I always know that when Layer-1 is on the job, everything will be done to the highest standard... They have been a trusted partner since 2014, and I can't recommend them highly enough!"</p><p class="text-right font-semibold text-gray-800 mt-4">- Sandy Roy, Director of Operations<br><span class="font-normal text-sm">Kuper Sotheby’s International Realty</span></p></div>
                     <div class="bg-[#e7f0fa] p-6 rounded-lg border-l-4 border-gray-200"><p class="text-sm text-gray-800 italic">“Layer-1 Technologies has expertly managed a wide range of our technology needs—from ground-up network & structured cabling and audio/video installs at our Austin HQ to large-scale rewiring projects and nationwide pharmacy expansions. Their professionalism, prompt communication, and deep technical expertise consistently ensure that each deployment meets our timelines and quality standards.”</p><p class="text-right font-semibold text-gray-800 mt-4">- Richard Torrez, Network Engineer V<br><span class="font-normal text-sm">Curative</span></p></div>
                     <div class="bg-[#e7f0fa] p-6 rounded-lg border-l-4 border-gray-200"><p class="text-sm text-gray-800 italic">“I am writing to recommend Layer-1 Technologies for your structured cabling needs... Layer-1 demonstrated excellent technical skills, completing the installation efficiently and flawlessly. They were also highly reliable, adhering to the project timeline and budget... I highly recommend Layer-1 Technology without reservation and plan on using them for our future needs. They are a top-notch cabling provider.”</p><p class="text-right font-semibold text-gray-800 mt-4">- JP Hale, Director of Technology<br><span class="font-normal text-sm">Hyde Park Schools</span></p></div>
                 </div>
             </section>
-            <section id="insurance" class="print-section-container min-h-[80vh]"> <!-- Added min-h for fill -->
+            <section id="insurance" class="print-section-container">
                 <h2 class="text-3xl font-bold text-[#0b5394] border-b-2 border-[#0b5394] pb-2 mb-6">Insurance</h2>
                 <div class="print-section-container">
                     <p class="mb-4 text-gray-800">Layer-1 Technologies is fully insured for your protection and peace of mind. Our current coverage is listed below.</p>
@@ -303,7 +307,7 @@
                     </div>
                 </div>
             </section>
-           
+            
             <!-- Dynamic Content Sections -->
             <section id="project-overview" class="print-section-container">
                 <h2 class="text-3xl font-bold text-[#0b5394] border-b-2 border-[#0b5394] pb-2 mb-6">Project Overview</h2>
@@ -311,6 +315,7 @@
                     <p>Content for this section will be generated by the Proposal Assistant.</p>
                 </div>
             </section>
+
             <section id="scope-of-work" class="print-section-container">
                 <h2 class="text-3xl font-bold text-[#0b5394] border-b-2 border-[#0b5394] pb-2 mb-6">Scope of Work</h2>
                 <p class="mb-4">The following is a detailed description of the services and tasks to be performed for this project. This scope has been developed to address the specific needs of <span data-display="clientCompany">[CLIENT NAME]</span>.</p>
@@ -318,7 +323,7 @@
                     <li>Content for this section will be generated by the Proposal Assistant.</li>
                 </ul>
             </section>
-           
+            
             <section id="project-estimate" class="print-section-container">
                  <h2 class="text-3xl font-bold text-[#0b5394] border-b-2 border-[#0b5394] pb-2 mb-6">Investment</h2>
                  <p class="mb-6">The total project investment is detailed below. Click the button to review and approve the official estimate online.</p>
@@ -333,6 +338,7 @@
                     </a>
                  </div>
             </section>
+
             <section id="terms-of-acceptance" class="print-section-container">
                 <h2 class="text-3xl font-bold text-[#0b5394] border-b-2 border-[#0b5394] pb-2 mb-6">Terms of Acceptance</h2>
                 <div class="space-y-4">
@@ -351,6 +357,7 @@
                     </ol>
                 </div>
             </section>
+
             <section id="acceptance" class="print-section-container">
                 <h2 class="text-3xl font-bold text-[#0b5394] border-b-2 border-[#0b5394] pb-2 mb-6">Acceptance of Proposal</h2>
                 <p class="mb-6">By signing below, you acknowledge that you have read, understood, and agree to the Scope of Work and the Terms of Acceptance outlined in this proposal. Your signature also acknowledges acceptance of our <a href="https://drive.google.com/file/d/1tJX2Ga1Iqqdczvpw_VDzJCN2mncz93Xw/view?usp=drive_link" target="_blank" class="text-[#0b5394] hover:underline font-semibold">General Terms & Conditions</a>, which are incorporated herein by reference. We look forward to partnering with you.</p>
@@ -365,14 +372,15 @@
                 </div>
             </section>
         </div>
-       
+        
         <footer class="text-center p-6 bg-gray-800 text-white text-sm no-print">
             <p>Layer-1 Technologies | Proposal <b data-display="estimateNumber">[PROPOSAL NUMBER]</b> | <span data-display="clientCompany">[CLIENT NAME]</span> | <span data-display="projectName">[PROJECT NAME]</span></p>
         </footer>
     </div>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-   
+    
     /**
      * ProposalApp Module
      * Encapsulates all logic for the proposal generator to keep the global namespace clean
@@ -391,6 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
             estimateUrl: '',
             projectNotes: '',
         },
+
         // --- DOM ELEMENTS ---
         // A structured object to hold references to all necessary DOM elements.
         elements: {
@@ -413,16 +422,18 @@ document.addEventListener('DOMContentLoaded', () => {
             displays: document.querySelectorAll('[data-display]'),
             links: document.querySelectorAll('[data-link="estimate"]'),
         },
+
         // --- METHODS ---
-       
+        
         /**
          * Initializes the application by setting up event listeners.
          */
         init() {
             this.elements.buttons.sampleData.addEventListener('click', () => this.fillWithSampleData());
             this.elements.buttons.populate.addEventListener('click', () => this.populateProposal());
-            this.elements.buttons.finalize.addEventListener('click', () => this.exportToPDF()); /* Changed to new method */
+            this.elements.buttons.finalize.addEventListener('click', () => window.print());
         },
+
         /**
          * Collects all values from the input fields and stores them in the state object.
          */
@@ -433,6 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         },
+
         /**
          * Updates all display elements and links in the proposal from the state object.
          * This is a single point of truth for UI updates, making it much cleaner.
@@ -442,9 +454,10 @@ document.addEventListener('DOMContentLoaded', () => {
             this.elements.displays.forEach(el => {
                 const key = el.dataset.display;
                 let value = this.state[key] || `[${key.toUpperCase()}]`;
+
                 if (key === 'investmentAmount') {
                     const amount = parseFloat(String(this.state.investmentAmount).replace(/,/g, ''));
-                    value = !isNaN(amount)
+                    value = !isNaN(amount) 
                         ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount)
                         : '[TOTAL AMOUNT]';
                 } else if (key === 'date') {
@@ -453,11 +466,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     el.innerHTML = value || '<p>Generating content...</p>';
                     return; // Skip textContent assignment for HTML content
                 }
+
                 el.textContent = value;
             });
+
             // Update all links with a `data-link` attribute
             this.elements.links.forEach(link => {
                 const url = this.state.estimateUrl;
+
                 if (url) {
                     link.href = url;
                     link.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -468,11 +484,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     link.onclick = (e) => e.preventDefault();
                 }
             });
-           
+            
             // Update page title
             document.title = `Layer-1 | Proposal ${this.state.estimateNumber} | ${this.state.clientCompany}`;
         },
-       
+        
         /**
          * Calls the backend API to generate proposal content.
          */
@@ -480,53 +496,60 @@ document.addEventListener('DOMContentLoaded', () => {
             const { projectNotes, clientCompany, projectName } = this.state;
             const overviewEl = document.querySelector('[data-display="overview"]');
             const scopeEl = document.querySelector('[data-display="scope"]');
-           
+            
             if (!projectNotes) {
                 overviewEl.innerHTML = '<p class="text-amber-600">Please enter project notes before generating.</p>';
                 scopeEl.innerHTML = '<li>Please enter project notes before generating.</li>';
                 return;
             }
+
             overviewEl.innerHTML = '<p>Generating overview... please wait.</p>';
             scopeEl.innerHTML = '<li>Generating scope... please wait.</li>';
+
             const prompt = `
                 You are a proposal writer for Layer-1 Technologies. Based on the notes below, generate two sections of a proposal: an "Overview" and a "Scope of Work".
+
                 **Instructions:**
                 1. Deeply analyze the scope from the projectNotes.
                 2. Write a professional "Project Overview" of 4-5 paragraphs, formatted as an HTML string (using <p> tags).
                 3. Create a "Scope of Work" as a detailed bulleted list, formatted as an HTML string (using <li> tags). Start each list item's content with a "<strong>" tag around the main item (e.g., "<strong>Structured Cabling:</strong>").
                 4. **IMPORTANT**: Return your response as a single, minified JSON object with two keys: "overview" and "scope". The value for each key should be the corresponding HTML string. Example: {"overview":"<p>...</p>","scope":"<li>...</li><li>...</li>"}
+
                 **Client & Project Info:**
                 - Client Company: ${clientCompany}
                 - Project Name: ${projectName}
+
                 **Project Notes from user:**
                 ---
                 ${projectNotes}
                 ---`;
-           
+            
             try {
                 // This relative path works on the deployed site. It may fail in some local preview environments.
-                const response = await fetch('/api/generate', {
+                const response = await fetch('/api/generate', { 
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ prompt }) // Send the prompt to your backend
                 });
+
                 if (!response.ok) {
                     throw new Error(`API call failed with status: ${response.status}.`);
                 }
-               
+                
                 const result = await response.json();
-               
+                
                 // Assuming the backend forwards the Gemini response structure
                 if (result.candidates && result.candidates.length > 0) {
                     const rawText = result.candidates[0].content.parts[0].text;
                     const cleanedText = rawText.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim();
                     const content = JSON.parse(cleanedText);
-                   
+                    
                     overviewEl.innerHTML = content.overview || '<p class="text-red-500">Error: Failed to parse overview.</p>';
                     scopeEl.innerHTML = content.scope || '<li><strong class="text-red-500">Error:</strong> Failed to parse scope.</li>';
                 } else {
                      throw new Error("No content generated from API.");
                 }
+
             } catch (error) {
                 console.error('Error fetching or parsing API data:', error);
                 const errorMessage = `An error occurred: ${error.message}. Check the console for details.`;
@@ -534,7 +557,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 scopeEl.innerHTML = `<li><strong class="text-red-500">${errorMessage}</strong></li>`;
             }
         },
-       
+        
         /**
          * Main function to trigger the proposal population process.
          */
@@ -544,6 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.generateContent();
             this.showSuccess(this.elements.buttons.populate, "Analyze & Populate Proposal");
         },
+
         /**
          * Fills the form with sample data for testing purposes.
          */
@@ -558,57 +582,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.elements.inputs.projectNotes.value = "Full technology infrastructure build-out for a new 5,000 sq ft office space. Scope includes: 48 Cat6a network drops for workstations and VoIP phones. Installation of a new server rack in the designated IT closet, including patch panels and cable management. Setup of two conference rooms with Polycom video conferencing systems and 75-inch displays. Installation of 8 ceiling-mounted Wi-Fi 6 access points. Setup of a 10-camera security system covering all entry points and main office areas. Door access control system for the main entrance and server room using key fobs.";
             this.showSuccess(this.elements.buttons.sampleData, "Fill with Sample Data (Testing)");
         },
-       
-        /**
-         * Exports to PDF with temporary adjustments.
-         */
-        exportToPDF() {
-            this.collectInputValues(); // Ensure latest data
-            const body = document.body;
-            const overviewSection = document.getElementById('project-overview');
-            const scopeSection = document.getElementById('scope-of-work');
-            const overviewContent = overviewSection.querySelector('[data-display="overview"]');
-            const scopeP = scopeSection.querySelector('p');
-            const scopeUl = scopeSection.querySelector('ul');
-            const originalOverviewFont = overviewContent.style.fontSize;
-            const originalScopePFont = scopeP.style.fontSize;
-            const originalScopeUlFont = scopeUl.style.fontSize;
-            const originalScopeBreak = scopeSection.style.pageBreakBefore;
-            
-            body.classList.add('pdf-export'); // If needed for other styles
-            
-            // Adjust font for overview/scope fit /* Temporary for PDF */
-            const pageHeight = 900; // Approx print content height
-            let fontSize = 14;
-            let combinedHeight = overviewSection.offsetHeight + scopeSection.offsetHeight;
-            if (combinedHeight > pageHeight) {
-                while (fontSize >= 10 && combinedHeight > pageHeight) {
-                    fontSize -= 0.5;
-                    overviewContent.style.fontSize = `${fontSize}px`;
-                    scopeP.style.fontSize = `${fontSize}px`;
-                    scopeUl.style.fontSize = `${fontSize}px`;
-                    combinedHeight = overviewSection.offsetHeight + scopeSection.offsetHeight;
-                }
-                if (fontSize < 10) {
-                    scopeSection.style.pageBreakBefore = 'always';
-                    overviewContent.style.fontSize = '14px';
-                    scopeP.style.fontSize = '14px';
-                    scopeUl.style.fontSize = '14px';
-                }
-            }
-            
-            const element = document.querySelector('.print-full-bleed');
-            const filename = `Layer-1 Technologies - Proposal # ${this.state.estimateNumber} - ${this.state.clientCompany}.pdf`;
-            html2pdf().from(element).save(filename).then(() => {
-                // Reset after export
-                body.classList.remove('pdf-export');
-                overviewContent.style.fontSize = originalOverviewFont;
-                scopeP.style.fontSize = originalScopePFont;
-                scopeUl.style.fontSize = originalScopeUlFont;
-                scopeSection.style.pageBreakBefore = originalScopeBreak;
-            });
-        },
-       
+        
         /**
          * Provides visual feedback on a button after a successful action.
          * @param {HTMLElement} button - The button element to modify.
@@ -624,9 +598,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 2000);
         }
     };
+
     // Start the application
     ProposalApp.init();
+
 });
 </script>
+
 </body>
 </html>
