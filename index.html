@@ -160,14 +160,6 @@ Old Index.html file:
                 <label for="clientCompany" class="block text-xl font-medium text-gray-300 text-center">Client Company Name</label>
                 <input type="text" id="clientCompany" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-[#0b5394] focus:border-[#0b5394]">
             </div>
-             <div>
-                <label for="clientContact" class="block text-xl font-medium text-gray-300 text-center">Client Contact Name</label>
-                <input type="text" id="clientContact" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-[#0b5394] focus:border-[#0b5394]">
-            </div>
-             <div>
-                <label for="clientEmail" class="block text-xl font-medium text-gray-300 text-center">Client Email Address</label>
-                <input type="email" id="clientEmail" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-[#0b5394] focus:border-[#0b5394]">
-            </div>
             <div>
                 <label for="investmentAmount" class="block text-xl font-medium text-gray-300 text-center">Total Project Investment</label>
                 <input type="text" id="investmentAmount" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-[#0b5394] focus:border-[#0b5394]" placeholder="e.g., 15,250.00">
@@ -395,8 +387,6 @@ document.addEventListener('DOMContentLoaded', () => {
             projectName: '',
             estimateNumber: '',
             clientCompany: '',
-            clientContact: '',
-            clientEmail: '',
             investmentAmount: '',
             estimateUrl: '',
             projectNotes: '',
@@ -409,8 +399,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 projectName: document.getElementById('projectName'),
                 estimateNumber: document.getElementById('estimateNumber'),
                 clientCompany: document.getElementById('clientCompany'),
-                clientContact: document.getElementById('clientContact'),
-                clientEmail: document.getElementById('clientEmail'),
                 investmentAmount: document.getElementById('investmentAmount'),
                 estimateUrl: document.getElementById('estimateUrl'),
                 projectNotes: document.getElementById('projectNotes'),
@@ -488,7 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             
             // Update page title
-            document.title = `Layer-1 Technologies - Proposal # ${this.state.estimateNumber} - ${this.state.clientCompany}`;
+            document.title = `Layer-1 Technologies - Proposal # ${this.state.estimateNumber} - ${this.state.clientCompany} - ${this.state.projectName}`;
         },
         
         /**
@@ -567,6 +555,13 @@ document.addEventListener('DOMContentLoaded', () => {
             this.collectInputValues();
             this.updateDisplay();
             this.generateContent();
+            // AUTO-SCROLL to Project Overview (requested change)
+            setTimeout(() => {
+                document.getElementById('project-overview').scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 2000);
             this.showSuccess(this.elements.buttons.populate, "Analyze & Populate Proposal");
         },
 
@@ -577,8 +572,6 @@ document.addEventListener('DOMContentLoaded', () => {
             this.elements.inputs.projectName.value = "New Office Technology Infrastructure Setup";
             this.elements.inputs.estimateNumber.value = "21497";
             this.elements.inputs.clientCompany.value = "Innovatech Solutions";
-            this.elements.inputs.clientContact.value = "Jane Doe";
-            this.elements.inputs.clientEmail.value = "jane.doe@innovatech.com";
             this.elements.inputs.investmentAmount.value = "18750.00";
             this.elements.inputs.estimateUrl.value = "https://connect.intuit.com/portal/app/CommerceNetwork/view/scs-v1-875bdd9c569f4fc9a48b838a8af616421f2329d4337145cc95d84be57dbe95bdaeb462237a32414f9dc9017ed52ee4e6?locale=en_US";
             this.elements.inputs.projectNotes.value = "Full technology infrastructure build-out for a new 5,000 sq ft office space. Scope includes: 48 Cat6a network drops for workstations and VoIP phones. Installation of a new server rack in the designated IT closet, including patch panels and cable management. Setup of two conference rooms with Polycom video conferencing systems and 75-inch displays. Installation of 8 ceiling-mounted Wi-Fi 6 access points. Setup of a 10-camera security system covering all entry points and main office areas. Door access control system for the main entrance and server room using key fobs.";
