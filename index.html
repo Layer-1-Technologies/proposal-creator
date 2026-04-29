@@ -11,113 +11,45 @@
     <!-- Google Material Symbols -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
+        body { font-family: 'Poppins', sans-serif; }
         .cover-bg {
             background-color: #000000;
             background-size: cover;
             background-position: center;
             color: white;
         }
-        .cover-bg h1, .cover-bg h2, .cover-bg p {
-             color: white !important;
-        }
-        .assistant-header {
-             color: white !important;
-        }
+        .cover-bg h1, .cover-bg h2, .cover-bg p { color: white !important; }
+        .assistant-header { color: white !important; }
         
         @media screen {
-            .proposal-body section:not(:last-child) {
-                margin-bottom: 3rem;
-            }
+            .proposal-body section:not(:last-child) { margin-bottom: 3rem; }
         }
 
         @media print {
-            .no-print {
-                display: none !important;
-            }
+            .no-print { display: none !important; }
             html, body {
-                margin: 0 !important;
-                padding: 0 !important;
-                width: 100%;
-                height: 100%;
-                -webkit-print-color-adjust: exact !important;
-                color-adjust: exact !important;
-                background: white !important;
+                margin: 0 !important; padding: 0 !important; width: 100%; height: 100%;
+                -webkit-print-color-adjust: exact !important; color-adjust: exact !important; background: white !important;
             }
-            .print-full-bleed {
-                max-width: none !important;
-                margin: 0 !important;
-                box-shadow: none !important;
-                background-color: transparent !important;
-            }
-            .proposal-body section {
-                page-break-before: always;
-                padding-top: 0.25in; 
-            }
-            .proposal-body section:first-of-type {
-                page-break-before: avoid;
-            }
-            .cover-bg {
-                height: 100vh;
-                page-break-after: always;
-                background-color: #000000 !important;
-            }
-            
-            .print-section-container {
-                page-break-inside: avoid !important;
-                display: inline-block !important;
-                width: 100% !important;
-            }
-
-            #why-us .grid,
-            #insurance .grid,
-            #acceptance .grid {
-                 display: grid !important;
-                 grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-                 gap: 1rem !important;
-            }
-            
-            #insurance .text-center {
-                text-align: center !important;
-            }
-            #testimonials .text-right {
-                text-align: right !important;
-            }
-
-            #table-of-contents li a {
-                font-size: 1.5rem !important;
-                line-height: 2rem !important;
-            }
-
-            #why-us .grid p, #insurance .grid p {
-                font-size: 0.8rem !important;
-                line-height: 1.1rem !important;
-            }
-            #insurance .grid .material-symbols-outlined {
-                font-size: 64px !important;
-            }
-
+            .print-full-bleed { max-width: none !important; margin: 0 !important; box-shadow: none !important; background-color: transparent !important; }
+            .proposal-body section { page-break-before: always; padding-top: 0.25in; }
+            .proposal-body section:first-of-type { page-break-before: avoid; }
+            .cover-bg { height: 100vh; page-break-after: always; background-color: #000000 !important; }
+            .print-section-container { page-break-inside: avoid !important; display: inline-block !important; width: 100% !important; }
+            #why-us .grid, #insurance .grid, #acceptance .grid { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 1rem !important; }
+            #insurance .text-center { text-align: center !important; }
+            #testimonials .text-right { text-align: right !important; }
+            #table-of-contents li a { font-size: 1.5rem !important; line-height: 2rem !important; }
+            #why-us .grid p, #insurance .grid p { font-size: 0.8rem !important; line-height: 1.1rem !important; }
+            #insurance .grid .material-symbols-outlined { font-size: 64px !important; }
             @page {
-                size: letter;
-                margin: 0.5in;
+                size: letter; margin: 0.5in;
                 @bottom-center {
                     content: "Page " counter(page) " of " counter(pages);
-                    font-family: 'Poppins', sans-serif;
-                    font-size: 9px;
-                    color: #6b7280;
-                    padding-bottom: 0.1in;
-                    vertical-align: top;
+                    font-family: 'Poppins', sans-serif; font-size: 9px; color: #6b7280; padding-bottom: 0.1in; vertical-align: top;
                 }
             }
-
-            @page :first {
-                margin: 0 !important;
-                @bottom-center {
-                    content: "" !important;
-                }
-            }
+            @page :first { margin: 0 !important; @bottom-center { content: "" !important; } }
         }
     </style>
 </head>
@@ -129,6 +61,7 @@
         <p class="mb-6 text-gray-300">Fill out the fields below, then use the buttons to generate and finalize your proposal.</p>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 mb-4">
+            <!-- Removed Client Contact and Client Email -->
             <div data-input-group>
                 <label for="projectName" class="block text-xl font-medium text-gray-300 text-center">Project Name</label>
                 <input type="text" id="projectName" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-[#0b5394] focus:border-[#0b5394]">
@@ -184,7 +117,6 @@
 
         <!-- Proposal Body -->
         <div class="p-8 md:p-12 proposal-body text-gray-800">
-            
             <!-- Table of Contents -->
             <section id="table-of-contents" class="print-section-container">
                 <h2 class="text-3xl font-bold text-[#0b5394] border-b-2 border-[#0b5394] pb-2 mb-6">Table of Contents</h2>
@@ -200,12 +132,12 @@
                 </ul>
             </section>
             
-            <!-- Static Content Sections (unchanged) -->
-            <section id="why-us" class="print-section-container"> ... </section>
+            <!-- Static sections unchanged -->
+            <section id="why-us" class="print-section-container"> ... (keep your original why-us, testimonials, insurance sections) </section>
             <section id="testimonials" class="print-section-container"> ... </section>
             <section id="insurance" class="print-section-container"> ... </section>
             
-            <!-- Dynamic Content Sections -->
+            <!-- Dynamic sections -->
             <section id="project-overview" class="print-section-container">
                 <h2 class="text-3xl font-bold text-[#0b5394] border-b-2 border-[#0b5394] pb-2 mb-6">Project Overview</h2>
                 <div data-display="overview" class="space-y-4">
@@ -221,7 +153,7 @@
                 </ul>
             </section>
             
-            <!-- Rest of the sections unchanged -->
+            <!-- Rest unchanged -->
             <section id="project-estimate" class="print-section-container"> ... </section>
             <section id="terms-of-acceptance" class="print-section-container"> ... </section>
             <section id="acceptance" class="print-section-container"> ... </section>
@@ -234,7 +166,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    
     const ProposalApp = {
         state: {
             projectName: '',
@@ -250,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 projectName: document.getElementById('projectName'),
                 estimateNumber: document.getElementById('estimateNumber'),
                 clientCompany: document.getElementById('clientCompany'),
-                investmentAmount: document.getElementById('investmentAmount'),
+                investmentAmount: document.getElementById('investmentAmount'), // keep if you still want it
                 estimateUrl: document.getElementById('estimateUrl'),
                 projectNotes: document.getElementById('projectNotes'),
             },
@@ -272,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
         collectInputValues() {
             for (const key in this.elements.inputs) {
                 if (this.elements.inputs.hasOwnProperty(key)) {
-                    this.state[key] = this.elements.inputs[key].value;
+                    this.state[key] = this.elements.inputs[key] ? this.elements.inputs[key].value : '';
                 }
             }
         },
@@ -284,16 +215,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (key === 'investmentAmount') {
                     const amount = parseFloat(String(this.state.investmentAmount).replace(/,/g, ''));
-                    value = !isNaN(amount) 
-                        ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount)
-                        : '[TOTAL AMOUNT]';
+                    value = !isNaN(amount) ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount) : '[TOTAL AMOUNT]';
                 } else if (key === 'date') {
                     value = new Date().toLocaleDateString('en-US');
                 } else if (key === 'overview' || key === 'scope') {
                     el.innerHTML = value || '<p>Generating content...</p>';
                     return;
                 }
-
                 el.textContent = value;
             });
 
@@ -302,18 +230,56 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (url) {
                     link.href = url;
                     link.classList.remove('opacity-50', 'cursor-not-allowed');
-                    link.onclick = null;
                 } else {
                     link.href = '#';
                     link.classList.add('opacity-50', 'cursor-not-allowed');
-                    link.onclick = (e) => e.preventDefault();
                 }
             });
-            
             document.title = `Layer-1 | Proposal ${this.state.estimateNumber} | ${this.state.clientCompany}`;
         },
-        
-        async generateContent() { ... }, // unchanged
+
+        async generateContent() {
+            // Your existing generateContent function - copy it exactly from your previous working version
+            const { projectNotes, clientCompany, projectName } = this.state;
+            const overviewEl = document.querySelector('[data-display="overview"]');
+            const scopeEl = document.querySelector('[data-display="scope"]');
+            
+            if (!projectNotes) {
+                overviewEl.innerHTML = '<p class="text-amber-600">Please enter project notes before generating.</p>';
+                scopeEl.innerHTML = '<li>Please enter project notes before generating.</li>';
+                return;
+            }
+
+            overviewEl.innerHTML = '<p>Generating overview... please wait.</p>';
+            scopeEl.innerHTML = '<li>Generating scope... please wait.</li>';
+
+            const prompt = `...`; // your full prompt here
+
+            try {
+                const response = await fetch('/api/generate', { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt })
+                });
+
+                if (!response.ok) throw new Error(`API call failed with status: ${response.status}`);
+
+                const result = await response.json();
+                if (result.candidates && result.candidates.length > 0) {
+                    const rawText = result.candidates[0].content.parts[0].text;
+                    const cleanedText = rawText.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim();
+                    const content = JSON.parse(cleanedText);
+                    
+                    overviewEl.innerHTML = content.overview || '<p>Error parsing overview.</p>';
+                    scopeEl.innerHTML = content.scope || '<li>Error parsing scope.</li>';
+                }
+            } catch (error) {
+                console.error(error);
+                const msg = `An error occurred: ${error.message}`;
+                overviewEl.innerHTML = `<p class="text-red-500">${msg}</p>`;
+                scopeEl.innerHTML = `<li><strong class="text-red-500">${msg}</strong></li>`;
+            }
+        },
 
         populateProposal() {
             this.collectInputValues();
@@ -323,44 +289,57 @@ document.addEventListener('DOMContentLoaded', () => {
             // Auto-scroll to Project Overview
             setTimeout(() => {
                 document.getElementById('project-overview').scrollIntoView({ 
-                    behavior: 'smooth',
-                    block: 'start'
+                    behavior: 'smooth', 
+                    block: 'start' 
                 });
-            }, 300);
+            }, 500);
 
             this.showSuccess(this.elements.buttons.populate, "Analyze & Populate Proposal");
         },
 
-        fillWithSampleData() { ... }, // unchanged except removed fields
+        fillWithSampleData() {
+            this.elements.inputs.projectName.value = "New Office Technology Infrastructure Setup";
+            this.elements.inputs.estimateNumber.value = "21497";
+            this.elements.inputs.clientCompany.value = "Innovatech Solutions";
+            this.elements.inputs.estimateUrl.value = "https://connect.intuit.com/...";
+            this.elements.inputs.projectNotes.value = "Full technology infrastructure build-out...";
+            this.showSuccess(this.elements.buttons.sampleData, "Fill with Sample Data (Testing)");
+        },
 
-        showSuccess(button, originalText) { ... }, // unchanged
+        showSuccess(button, originalText) {
+            const originalClasses = button.className;
+            button.textContent = '✓ Done!';
+            button.className = button.className.replace(/bg-[\w-]+/, 'bg-green-500').replace(/hover:bg-[\w-]+/, 'hover:bg-green-600');
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.className = originalClasses;
+            }, 2000);
+        },
 
-        // New PDF filename logic
+        // Updated PDF filename with Project Name
         exportPDF() {
             this.collectInputValues();
             this.updateDisplay();
 
-            const proposalNum = this.state.estimateNumber || 'Unknown';
-            const client = (this.state.clientCompany || 'Client').replace(/[^a-zA-Z0-9]/g, ' ');
-            const project = (this.state.projectName || 'Project').replace(/[^a-zA-Z0-9]/g, ' ');
+            const proposalNum = (this.state.estimateNumber || 'Unknown').trim();
+            const client = (this.state.clientCompany || 'Client').replace(/[^a-zA-Z0-9]/g, ' ').trim();
+            const project = (this.state.projectName || 'Project').replace(/[^a-zA-Z0-9]/g, ' ').trim();
 
-            const fileName = `Layer-1 Technologies - Proposal # ${proposalNum} - ${client} - ${project}.pdf`;
+            const fileName = `Layer-1 Technologies - Proposal # ${proposalNum} - ${client} - ${project}`;
 
-            // Set dynamic filename for print
-            const printTitle = document.createElement('title');
-            printTitle.textContent = fileName.replace('.pdf', '');
-            document.head.appendChild(printTitle);
+            // Set title for PDF filename
+            const originalTitle = document.title;
+            document.title = fileName;
 
             window.print();
 
-            // Cleanup
-            setTimeout(() => document.head.removeChild(printTitle), 1000);
+            // Restore original title
+            setTimeout(() => { document.title = originalTitle; }, 1000);
         }
     };
 
     ProposalApp.init();
 });
 </script>
-
 </body>
 </html>
